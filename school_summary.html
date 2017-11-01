@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<!--强制让文档的宽度与设备的宽度保持1:1，并且文档最大的宽度比例是1.0，且不允许用户点击屏幕放大浏览-->
+		<meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no" />
+		<!--WebApp全屏模式   隐藏地址栏-->
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<!--苹果强制全屏显示-->
+		<meta name="apple-touch-fullscreen" content="yes" />
+		<!--强制全屏显示-->
+		<meta name="full-screen" content="yes" />
+		<!--制定iphone中safari顶端的状态条的样式（default:白色，black:黑色，black-translucent：半透明）-->
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<!--告诉设备忽略将页面中的数字识别为电话号码 -->
+		<meta name="format-detection" content="telephone=no" />
+		<!--告诉设备忽略将页面中的地址识别 -->
+		<meta name="format-detection" content="address=no" />
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript">
+			function refresh() {
+				var deviceWidth = document.documentElement.clientWidth;
+				if(deviceWidth > 750) {
+					document.documentElement.style.fontSize = 750 / 7.5 + "px";
+				} else {
+					document.documentElement.style.fontSize = deviceWidth / 7.5 + "px";
+				}
+			}
+			refresh();
+			window.onresize = function() {
+				refresh();
+			}
+		</script>
+	</head>
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		/*引用字体 */
+		@font-face {
+			font-family: PingFangSC-Regular;
+			src: url('css/PingFang SC Regular.ttf'), url('css/PingFang SC Regular.ttf')
+		}
+		
+		@font-face {
+			font-family: PingFangSC-Medium;
+			src: url('css/PingFang Medium_downcc.otf'), url('css/PingFang Medium_downcc.otf')
+		}
+		
+		
+		
+		
+		/*共用颜色 */
+		
+		.font_color {
+			color: #2B94FA;
+		}
+		/*过渡横线 */
+		
+		.transition_line {
+			height: 0.24rem;
+			background: #f0f0f0;
+		}
+		/*头部 */
+		.header {
+			height: 0.9rem;
+			border-bottom: 0.02rem solid #F0F0F0;
+			padding-top: 0.24rem;
+			box-sizing: border-box;
+		}
+		
+		.header .vertical_line {
+			float: left;
+			width: 0.06rem;
+			height: 0.3rem;
+			background: #2B94FA;
+			margin-left: 0.24rem;
+			position: relative;
+			top: 0.06rem;
+		}
+		
+		.header .header_title {
+			float: left;
+			margin-left: 0.1rem;
+			font-size: 0.3rem;
+			font-weight: bold;
+			font-family: PingFangSC-Medium;
+		}
+		
+		#school_about {
+			margin-top: 0.3rem;
+			width: 7.02rem;
+			font-family: PingFangSC-Regular;
+			margin-left: 0.24rem;
+			font-size: 0.28rem;
+			color: #232427;
+		}
+		
+		.line_unbreak {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 3;
+			-webkit-box-orient: vertical;
+			
+		}
+		
+		.school_about_text {
+			font-family: PingFangSC-Regular;
+			font-size: 0.24px;
+			color: #8E8E8E;
+			padding-left: 0.24rem;
+			box-sizing: border-box;
+			margin-top: 0.3rem;
+		}
+		
+		.school_about_text img {
+			width: 0.3rem;
+			height: 0.3rem;
+			position: relative;
+			top: 0.08rem;
+			margin-right: 0.1rem;
+		}
+		
+		.check_all {
+			margin-top: 0.1rem;
+			text-align: center;
+			height: 0.33rem;
+			font-size: 0.24rem;
+			color: #2B94FA;
+			margin-bottom: 0.24rem;
+			font-family: PingFangSC-Regular;
+		}
+		
+		.check_all img {
+			width: 0.1rem;
+			height: 0.17rem;
+			transform: rotate(90deg);
+			position: relative;
+			left: 0.17rem;
+		}
+		
+		.school_position {
+			width: 100%;
+			padding-top: 0.3rem;
+			padding-left: 0.24rem;
+			box-sizing: border-box;
+		}
+		
+		.school_position_more {
+			font-size: 0.24rem;
+			color: #8E8E8E;
+			text-align: right;
+			padding-right: 0.23rem;
+			box-sizing: border-box;
+			margin-bottom: 0.24rem;
+			font-family: PingFangSC-Regular;
+		}
+		
+		.school_position_more img {
+			width: 0.1rem;
+			height: 0.17rem;
+		}
+		
+		.school_position ul {
+			width: 100%;
+			height: 2.18rem;
+			margin-bottom: 0.24rem;
+		}
+		
+		.school_position ul li {
+			float: left;
+			list-style: none;
+			width: 2.18rem;
+			height: 2.18rem;
+			margin-right: 0.24rem;
+		}
+		
+		.school_position ul li img {
+			width: 100%;
+			height: auto;
+		}
+		
+		.scale_big_box {
+			margin-top: 0.8rem;
+			position: relative;
+			width: 100%;
+			height: 1.5rem;
+			padding: 0 0.8rem;
+			box-sizing: border-box;
+		}
+		
+		.scale_box {
+			width: 1rem;
+			height: 0.67rem;
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			right: 0;
+			margin: auto;
+		}
+		
+		.scale_box * {
+			float: left;
+		}
+		
+		.scale_img {
+			width: 1.5rem;
+			height: 1.5rem;
+		}
+		
+		.scale_line_big_box {
+			width: 100%;
+			height: 0.38rem;
+			margin-top: 0.8rem;
+			position: relative;
+		}
+		
+		.scale_line_box {
+			width: 5.4rem;
+			height: 0.36rem;
+			border: 1px solid #8E8E8E;
+			border-radius: 100px;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin: auto;
+			padding: 0.05rem;
+			box-sizing: border-box;
+		}
+		
+		.scale_line_left {
+			width: 2rem;
+			height: 0.22rem;
+			background: #FF78B4;
+			border-radius: 13px 0 0 13px;
+			margin-right: 0.05rem;
+			float: left;
+		}
+		
+		.scale_line_right {
+			float: left;
+			width: 3.20rem;
+			height: 0.22rem;
+			background: #2B94FA;
+			border-radius: 0px 13px 13px 0;
+		}
+	</style>
+
+	<body>
+		<!--过渡 -->
+		<div class="transition_line"></div>
+		<div>
+			<!--头部 -->
+			<div class="header">
+				<!-- | -->
+				<div class="vertical_line"></div>
+				<!--学校介绍 -->
+				<span class="font_color header_title">学校介绍</span>
+			</div>
+			<!--学校网址-->
+			<p class="school_about_text">
+				<img src="img/网址.png" />www.zhongshandaxue.com
+			</p>
+			<!--学校电话-->
+			<p class="school_about_text">
+				<img src="img/电话.png" style="top: 0.06rem;" />020-88888888
+			</p>
+			<!--学校详细介绍-->
+			<div class="line_unbreak" id="school_about">
+				看大戏荡秋千，踢个石子儿在小路边，廊门的灯笼集市的汤面，新买的衣裳压岁的零钱，小布鞋花手绢，吹糖人儿的老伯和故事里的神仙，我蒙上帕子数到三声，你快快看大戏荡秋千，踢个石子儿在小路边，廊门的灯笼集市的汤面，新买的衣裳压岁的零钱，小布鞋花手绢，吹糖人儿的老伯和故事里的神仙，我蒙上帕子数到三声
+			</div>
+			<!--查看全部-->
+			<div class="check_all">
+				查看全部<img src="img/Group 8 Copy.png" />
+			</div>
+		</div>
+		<div class="transition_line"></div>
+		<div>
+			<div class="header">
+				<!-- | -->
+				<div class="vertical_line"></div>
+				<!--地理位置 -->
+				<span class="font_color header_title">地理位置</span>
+			</div>
+			<div class="school_position">
+				<!--校区位置-->
+				<p style="font-size: 0.28rem;color: #232427;margin-bottom: 0.24rem;font-family: PingFangSC-Regular;">主校区：广东省广州市中山路22号</p>
+				<!--校区所属地区-->
+				<p style="font-size: 0.28rem;color: #232427;margin-bottom: 0.3rem;font-family: PingFangSC-Regular;">所在校区：广东省广州市</p>
+				<!--学校图片-->
+				<ul>
+					<li>
+						<img src="img/3.png" />
+					</li>
+					<li>
+						<img src="img/3.png" />
+					</li>
+					<li>
+						<img src="img/3.png" />
+					</li>
+				</ul>
+                <!--学校更多介绍-->
+				<p class="school_position_more">更多 <img src="img/Group 8.png" /></p>
+			</div>
+			<div class="transition_line"></div>
+		</div>
+		<div style="height: 5.5rem;">
+			<div class="header">
+				<!-- | -->
+				<div class="vertical_line"></div>
+				<!--男女比例 -->
+				<span class="font_color header_title">男女比例</span>
+			</div>
+			<div class="scale_big_box">
+				<!--女-->
+				<img class="scale_img" src="img/女.png" style="float: left;" />
+				<!--女：男-->
+				<div class="scale_box">
+					<span style="font-size: 0.48rem;color: #FF78B4;font-family: PingFangSC-Medium;">4</span><span style="font-size: 0.36rem;color: #000000;line-height: 0.67rem;margin-left: 0.158rem;margin-right: 0.158rem;">:</span>
+					<span style="font-size: 0.48rem;color: #2B94FA;;line-height: 0.67rem;position: relative;bottom: 0rem;font-family: PingFangSC-Medium;">6</span>
+				</div>
+				<!--男-->
+				<img class="scale_img" src="img/男.png" style="float: right;" />
+			</div>
+			<!--比例进度条-->
+			<div class="scale_line_big_box">
+				<div class="scale_line_box">
+					<div class="scale_line_left"></div>
+					<div class="scale_line_right"></div>
+				</div>
+			</div>
+
+		</div>
+	</body>
+	<script src="js/zepto.min.js"></script>
+	<script>
+		$(function() {
+			//设置一个锁
+			var flag = true;
+            //查看全部点击事件
+			$('.check_all').click(function() {
+				//当锁是true的时候
+				if(flag) {
+					//移除class名
+					$("#school_about").removeClass("line_unbreak");
+					//三角号动画
+					$(".check_all img").animate({
+						"transform": "rotate(270deg)"
+					});
+					//让锁变成flase
+					flag = false;
+				} 
+				//当锁是false的时候
+				else {
+					//添加class名
+					$("#school_about").addClass("line_unbreak");
+					//三角号动画
+					$(".check_all img").animate({
+						"transform": "rotate(90deg)"
+					})
+					//让锁变回true
+					flag = true;
+				}
+
+			})
+		})
+	</script>
+
+</html>

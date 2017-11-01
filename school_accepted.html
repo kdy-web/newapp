@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<!--强制让文档的宽度与设备的宽度保持1:1，并且文档最大的宽度比例是1.0，且不允许用户点击屏幕放大浏览-->
+		<meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no" />
+		<!--WebApp全屏模式   隐藏地址栏-->
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<!--苹果强制全屏显示-->
+		<meta name="apple-touch-fullscreen" content="yes" />
+		<!--强制全屏显示-->
+		<meta name="full-screen" content="yes" />
+		<!--制定iphone中safari顶端的状态条的样式（default:白色，black:黑色，black-translucent：半透明）-->
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<!--告诉设备忽略将页面中的数字识别为电话号码 -->
+		<meta name="format-detection" content="telephone=no" />
+		<!--告诉设备忽略将页面中的地址识别 -->
+		<meta name="format-detection" content="address=no" />
+		<meta charset="utf-8" />
+
+		<title></title>
+
+	</head>
+	<script src="js/echarts.common.min.js"></script>
+	<script type="text/javascript">
+		//换算函数  10px=1rem
+		var deviceWidth = document.documentElement.clientWidth;
+		var fontsize;
+
+		function refresh() {
+			console.log(deviceWidth)
+			if(deviceWidth > 750) {
+				fontsize = 14 * deviceWidth / 750
+				document.getElementById("chartmain").style.height = "6rem"
+				document.documentElement.style.fontSize = 750 / 7.5 + "px";
+			} else if(deviceWidth * 2 < 750) {
+				fontsize = 12;
+
+				document.getElementsByClassName("chartbox")[0].style.marginLeft = "1.8rem";
+				console.log(document.getElementsByClassName("chartbox")[0])
+				document.documentElement.style.fontSize = deviceWidth / 7.5 + "px";
+			} else {
+				fontsize = 12;
+
+				document.documentElement.style.fontSize = deviceWidth / 7.5 + "px";
+			}
+		}
+		refresh();
+		window.onresize = function() {
+			refresh();
+		}
+	</script>
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		/*共用颜色 */
+		
+		@font-face {
+			font-family: PingFangSC-Regular;
+			src: url('css/PingFang SC Regular.ttf'), url('css/PingFang SC Regular.ttf')
+		}
+		
+		@font-face {
+			font-family: PingFangSC-Medium;
+			src: url('css/PingFang Medium_downcc.otf'), url('css/PingFang Medium_downcc.otf')
+		}
+		
+		.font_color {
+			color: #2B94FA;
+		}
+		/*过渡横线 */
+		
+		.transition_line {
+			height: 0.24rem;
+			background: #f0f0f0;
+		}
+		/*头部 */
+		
+		.header {
+			height: 0.9rem;
+			border-bottom: 0.02rem solid #F0F0F0;
+			padding-top: 0.24rem;
+			box-sizing: border-box;
+		}
+		
+		.header .vertical_line {
+			float: left;
+			width: 0.06rem;
+			height: 0.3rem;
+			background: #2B94FA;
+			margin-left: 0.24rem;
+			position: relative;
+			top: 0.06rem;
+		}
+		
+		.header .header_title {
+			float: left;
+			margin-left: 0.1rem;
+			font-size: 0.3rem;
+			font-weight: bold;
+			font-family: PingFangSC-Medium;
+		}
+		/*较稳妥旁的横线 */
+		
+		.horizontal_line {
+			width: 0.4rem;
+			height: 0.05rem;
+			background: #2B94FA;
+			position: absolute;
+			top: 0.3rem;
+		}
+		/*成绩部分 */
+		
+		.grade {
+			width: 100%;
+			height: 1.16rem;
+			padding-top: 0.3rem;
+		}
+		/*成绩左边圆圈部分 */
+		
+		.grade .grade_circle {
+			float: left;
+			margin-left: 1.9rem;
+			border: 4px solid #2B94FA;
+			border-radius: 50%;
+			width: 1.08rem;
+			height: 1.08rem;
+			line-height: 0.56rem;
+			text-align: center;
+		}
+		/*成绩左边圆圈文字 */
+		
+		.grade_font {
+			width: 100%;
+			height: 0.33rem;
+			line-height: 0.33rem;
+			margin-top: 0.2rem;
+		}
+		
+		.grade_font span {
+			float: left;
+		}
+		/*成绩右边进度条*/
+		
+		.chartbox {
+			float: left;
+			margin-left: 1.57rem;
+			width: 1.15rem;
+			height: 1.15rem;
+		}
+		
+		.myChart {
+			width: 1.15rem;
+			height: 1.15rem;
+		}
+		/*警告部分 */
+		
+		.grade_warn {
+			text-align: center;
+			margin-top: 0.24rem;
+		}
+		
+		.grade_warn * {
+			float: left;
+		}
+		/*录取部分 */
+		
+		.admit_img {
+			transform: rotate(90deg);
+			width: 0.1rem;
+			height: 0.17rem;
+			float: right;
+			margin-right: 0.1rem;
+			position: relative;
+			top: 0.18rem;
+		}
+		
+		.admit_button {
+			float: left;
+			width: 1.7rem;
+			height: 0.54rem;
+			border: 1px solid #2B94FA;
+			font-size: 0.24rem;
+			color: #2B94FA;
+			text-align: center;
+			line-height: 0.52rem;
+			background: #FFFFFF;
+			border-radius: 0.1rem;
+			font-family: PingFangSC-Regular;
+		}
+		
+		#chartmain {
+			clear: both;
+			width: 100%;
+			height: 6.34rem;
+			position: relative;
+			bottom: 0.8rem;
+			left: 0.3rem;
+		}
+		/*往年部分 */
+		
+		.previous_title {
+			width: 100%;
+			height: 0.4rem;
+			margin-top: 0.3rem;
+		}
+		
+		.previous_title * {
+			float: left;
+		}
+		
+		.previous_title_font {
+			font-size: 0.28rem;
+			color: #8E8E8E;
+			font-family: PingFangSC-Regular;
+		}
+		/*往年数据部分 */
+		
+		.grade_content {
+			margin-top: 0.3rem;
+		}
+		
+		.grade_content * {
+			float: left;
+		}
+		
+		.grade_content li {
+			clear: both;
+			list-style: none;
+			height: 0.4rem;
+			margin-bottom: 0.3rem;
+		}
+		
+		.grade_content li span {
+			font-size: 0.28rem;
+			font-family: PingFangSC-Regular;
+		}
+		
+		.grade_content li span:first-child {
+			margin-left: 1rem;
+		}
+		
+		.grade_content li span:last-child {
+			margin-left: 3.87rem;
+		}
+	</style>
+
+	<body>
+		<!--过渡 -->
+		<div class="transition_line"></div>
+		<div style="height: 4.57rem;">
+			<!--头部 -->
+			<!--头部 -->
+			<div class="header">
+				<!-- | -->
+				<div class="vertical_line"></div>
+				<!--填报建议 -->
+				<span class="font_color header_title">填报建议</span>
+				<div style="float:right;margin-right:3.1%;height: 0.33rem;line-height: 0rem;position: relative;bottom: 0.1rem;">
+					<span style="font-size: 0.24rem;color: #8E8E8E;font-family: PingFangSC-Regular;">录取概率解析</span>
+					<!--录取概率解析 的箭头 -->
+					<img src="img/Group 8.png" style="width: 0.1rem;height:0.17rem;margin-left: 0.1rem;" />
+				</div>
+			</div>
+
+			<div style="margin-top: 0.3rem;">
+				<!--较稳妥部分 -->
+				<div style="width: 100%;position: relative;height: 0.56rem;">
+					<div style="position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;width: 1.96rem;text-align: center;line-height: 0.56rem;">
+						<!--较稳妥旁的横线-->
+						<div class="horizontal_line" style="left: -0.2rem;"></div>
+						<span style="color:#2B94FA ;font-size: 0.40rem;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;font-family: PingFangSC-Regular;">较稳妥</span>
+						<!--较稳妥旁的横线-->
+						<div class="horizontal_line" style="right: -0.2rem;;"></div>
+					</div>
+				</div>
+				<!--分数与概率部分 -->
+				<div class="grade">
+					<!--分数圆圈 -->
+					<div class="grade_circle">
+						<span class="font_color" style="font-size: 0.34rem;font-family: PingFangSC-Regular;">600</span><span class="font_color" style="font-size: 0.24rem;font-family: PingFangSC-Regular;">分</span>
+					</div>
+					<!--概率进度条 -->
+					<div class="chartbox">
+						<canvas class="myChart" id="myChart" width="100%" height="100%" data-total="100" data-curr="78"></canvas>
+					</div>
+				</div>
+				<!--分数与概率文字部分 -->
+				<div class="grade_font">
+					<span style="font-size: 0.24rem;color: #8E8E8E;margin-left: 1.63rem;font-family: PingFangSC-Regular;">16年最低分数线</span>
+					<span style="font-size: 0.24rem;color: #8E8E8E;margin-left:1.4rem ;font-family: PingFangSC-Regular;">录取概率</span>
+				</div>
+				<!--警告部分 -->
+				<div class="grade_warn">
+					<img src="img/注意.png" style="width: 0.33rem;height: 0.26rem;margin-right: 0.1rem;margin-left: 1.25rem;position: relative;top: 0.04rem;" />
+					<span style="font-size: 0.24rem;color: #8E8E8E;font-family: PingFangSC-Regular;">录取概率根据科学计算得出，结果仅供参考</span>
+				</div>
+			</div>
+		</div>
+		<!--过渡 -->
+		<div class="transition_line"></div>
+		<div style="height: 6.85rem;overflow: hidden;">
+			<div class="header">
+				<!-- | -->
+				<div class="vertical_line"></div>
+				<!--往年录取情况 -->
+				<span class="font_color header_title">往年录取情况（广东理科）</span>
+			</div>
+			<div style="width: 100%;height: 0.54px;margin-top: 0.35rem;">
+				<!--本科批次分类选择 -->
+				<button id="admit_first" class="admit_button" style="margin-left: 1.58rem;">本科第一批
+				<img class="admit_img" src="img/Group 8 Copy@2x.png" />
+				</button>
+				<!--选择录取分数线 -->
+				<button class="admit_button" style="margin-left: 1rem;">录取最低分
+					<img src="img/Group 8 Copy@2x.png" class="admit_img" />
+				</button>
+
+			</div>
+			<!--历年录取分数线的折线图-->
+			<div id="chartmain">
+
+			</div>
+		</div>
+		<!--过渡 -->
+		<div class="transition_line"></div>
+		<div style="height: 6.13rem;">
+			<div class="header">
+				<!-- | -->
+				<div class="vertical_line"></div>
+				<!--往年专业数据 -->
+				<span class="font_color header_title">往年专业数据</span>
+			</div>
+
+			<div style="width: 100%;height: 0.54rem;margin-top: 0.35rem;">
+				<!--选择年份-->
+				<button id="admit_first" class="admit_button" style="margin-left: 1.58rem;">2016
+				<img src="img/Group 8 Copy@2x.png"  class="admit_img"/>
+				</button>
+				<!--选择批次-->
+				<button class="admit_button" style="margin-left: 1rem;">本科第一批
+					<img src="img/Group 8 Copy@2x.png"  class="admit_img"/>
+				</button>
+
+			</div>
+			<div class="previous_title">
+
+				<span class="previous_title_font" style="margin-left: 1rem;">专业</span>
+				<span class="previous_title_font" style="margin-left: 4.1rem;">最低分</span>
+
+			</div>
+			<ul class="grade_content">
+				<!--专业分类与分数-->
+				<li>
+					<span>会计学</span>
+					<span style="margin-left: 4.15rem;">599</span>
+				</li>
+				<li>
+					<span>酒店管理</span>
+					<span>589</span>
+				</li>
+				<li>
+					<span>物流管理</span>
+					<span>600</span>
+				</li>
+				<li>
+					<span>计算机科学与技术</span>
+					<span style="margin-left: 2.76rem;">601</span>
+				</li>
+			</ul>
+			<div>
+
+				<span style="float: left;color: #9B9B9B;font-size: 0.24rem;margin-left: 2.19rem;font-family: PingFangSC-Regular;">数据来源于《志愿填报指南》</span>
+			</div>
+		</div>
+	</body>
+	<script src="js/jquery-1.8.3.min.js"></script>
+	<script>
+		$(function() {
+			$.ajax({
+				beforeSend: function(request) {
+					request.setRequestHeader("Authorization", "56161864-5D41-49D3-BAC1-04ADF80E8238");
+					
+				},
+				contentType: "application/json",
+				type: "get",
+				url: "http://www.xueguoguo.cn/api/v1/job/detail",
+				async: false,
+
+				dataType: "json",
+				data: {
+					id: 10005
+				},
+				success: function(result) {
+					console.log(result)
+				}
+			}).done(function(result) {
+				console.log(result)
+			});
+			//创建一个图表
+			var option = {
+				title: {
+
+				},
+
+				grid: {
+
+				},
+				//点击显示的内容
+				tooltip: {
+					formatter: '分数:{c}'
+
+				},
+				legend: {
+					data: ['用户来源']
+				},
+				//X轴
+				xAxis: {
+					splitLine: {
+						show: false
+					},
+					//数据
+					data: ["", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"],
+
+					axisLabel: {
+						//显示文字的样式
+						textStyle: {
+							color: '#8e8e8e',
+							fontSize: fontsize
+						}
+
+					},
+					axisTick: {
+
+						alignWithLabel: true,
+						lineStyle: {
+							type: 'dashed'
+						}
+					}
+				},
+				//Y轴
+				yAxis: [{
+					splitLine: {
+						show: false
+					},
+					type: 'value',
+					axisLabel: {
+						formatter: '{value}',
+						textStyle: {
+							color: '#8e8e8e',
+							fontSize: fontsize
+						}
+					},
+					//Y轴 最大值与最小值
+					min: 580,
+					max: 630,
+					//最小间距
+					minInterval: 5,
+					//分成10份
+					splitNumber: 10,
+
+					axisTick: {
+						length: 5
+					}
+				}],
+				series: [{
+					symbol: 'circle',
+					//折现点的大小
+					symbolSize: 10,
+					name: '',
+					//图表类型
+					type: 'line',
+					//显示的数据
+					data: ["", 615, 604, 609, 590, 615, 621, 604, 621, 605, 622, 626],
+					itemStyle: {
+						normal: {
+							color: '#28a3fa',
+							lineStyle: {
+								//线的样式
+								width: 1,
+								color: '#28a3fa'
+							}
+						}
+					}
+				}]
+			};
+			//初始化echarts实例
+			var myChart = echarts.init(document.getElementById('chartmain'));
+
+			//使用制定的配置项和数据显示图表
+			myChart.setOption(option);
+		})
+	</script>
+	<script type="text/javascript">
+		//画进度条
+		(function($, window, undefined) {
+			$.fn.ringChart = function(options) {
+				var defaults = {};
+				var settings = $.extend({}, defaults, options);
+				var canvas = $(this).get(0);
+				var total = $(this).attr("data-total");
+				var curr = $(this).attr("data-curr");
+				var constrast = parseFloat(curr / total).toFixed(2); //比例
+				var context = null;
+				if(!canvas.getContext) {
+					return;
+				}
+				// 定义开始点的大小
+				var startArc = Math.PI * 1.4;
+				// 根据占的比例画圆弧
+				var endArc = (Math.PI * 2) * constrast;
+				context = canvas.getContext("2d");
+				// 圆心文字
+				context.font = "28px PingFangSC-Regular";
+				context.fillStyle = '#28a3fa';
+				context.textBaseline = 'middle';
+				var text = (Number(curr / total) * 100).toFixed(0) + "%";
+				var tw = context.measureText(text).width;
+				context.fillText(text, 50 - tw / 2, 50);
+				// 绘制背景圆 
+				context.save();
+				context.beginPath();
+				context.strokeStyle = "#FFFFFF";
+				context.lineWidth = "4";
+				context.arc(50, 50, 44, 0, Math.PI * 2, false);
+				context.closePath();
+				context.stroke();
+				context.restore();
+				// 若为百分零则不必再绘制比例圆
+				if(curr / total == 0) {
+					return;
+				}
+				// 绘制比例圆 
+				context.save();
+				context.beginPath();
+				var gradient = context.createLinearGradient(0, 0, 0, 120);
+
+				gradient.addColorStop("0", "#28a3fa");
+				gradient.addColorStop("0.5", "#67dfd0");
+
+				context.lineCap = 'round';
+				context.strokeStyle = gradient;
+				context.lineWidth = "12";
+				context.arc(50, 50, 44, startArc, (curr % total == 0 ? startArc : (endArc + startArc)), false);
+				context.stroke();
+				context.restore();
+			}
+		})($, window);
+		$("#myChart").ringChart();
+	</script>
+
+</html>
