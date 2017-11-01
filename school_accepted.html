@@ -379,25 +379,20 @@
 	<script src="js/jquery-1.8.3.min.js"></script>
 	<script>
 		$(function() {
-			$.ajax({
-				beforeSend: function(request) {
-					request.setRequestHeader("Authorization", "56161864-5D41-49D3-BAC1-04ADF80E8238");
-					
-				},
-				contentType: "application/json",
-				type: "get",
-				url: "http://www.xueguoguo.cn/api/v1/job/detail",
-				async: false,
-
-				dataType: "json",
-				data: {
-					id: 10005
-				},
-				success: function(result) {
-					console.log(result)
+			var settings = {
+				"async": true,
+				"crossDomain": true,
+				"url": "http://www.xueguoguo.cn/api/v1/college/query",
+				"method": "GET",
+				"headers": {
+					"authorization": "56161864-5D41-49D3-BAC1-04ADF80E8238",
+					"cache-control": "no-cache",
+					"postman-token": "cfa579a6-d8e5-d1d4-faea-f4be081f670e"
 				}
-			}).done(function(result) {
-				console.log(result)
+			}
+
+			$.ajax(settings).done(function(response) {
+				console.log(response);
 			});
 			//创建一个图表
 			var option = {
